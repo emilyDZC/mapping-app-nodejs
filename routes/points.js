@@ -1,7 +1,7 @@
 const express = require("express");
 const router = express.Router();
-const { getPoints } = require("../controllers/pointsController");
+const { getPoints, addPoint } = require("../controllers/pointsController");
 
-router.route("/").get(getPoints);
+router.route("/").get(getPoints).post(addPoint);
 
 module.exports = router;
