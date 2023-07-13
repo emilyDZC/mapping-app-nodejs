@@ -6,9 +6,44 @@ const Point = require("../models/Point");
 
 exports.getPoints = async (req, res, next) => {
     try {
-        const points = await Point.find({});
+        // const points = await Point.find({});
+      //   const points = await Point.findOne({ geometry: 
+      //       { $geoWithin: { $geometry: { type: "Polygon", 
+      //         coordinates: [
+      //           [
+      //             [ -69.92467200399993, 12.519232489000045 ],
+      //             [ -69.92467200399992, 12.519232489000044 ],
+      //             [ -69.92467200399991, 12.519232489000043 ],
+      //             [ -69.92467200399993, 12.519232489000045 ]
+      //           ]
+      //         ]
+      //       } 
+      //     } 
+      //   } 
+      // })
         // const points = await this.getPoints(req.points);
-        console.log("get points endpoint");
+        // const points = await Point.find({
+        //   location: {
+        //     $geoWithin: {
+        //       $centerSphere: [
+        //         [ -69.92467200399993, 12.519232489000045 ],
+        //         5 / 3963.2
+        //       ]
+        //     }
+        //   }
+        // })
+        const points = await Point.aggregate([
+          {
+            $geoNear: {
+                near: { type: "Point", coordinates: [ -69.92467200399993, 12.519232489000045 ] },
+                distanceField: "dist.calculated",
+                maxDistance: 200,
+                // query: { category: "Parks" },
+                includeLocs: "dist.location",
+                spherical: true
+            }
+          }
+        ])
 
         return res.status(200).json({
             success: true,
