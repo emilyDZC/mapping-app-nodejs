@@ -7,6 +7,7 @@
 
 <script>
 import {LMap, LTileLayer, LMarker} from 'vue2-leaflet';
+import axios from 'axios'
 
 export default {
   components: {
@@ -21,8 +22,26 @@ export default {
         '&copy; <a target="_blank" href="http://osm.org/copyright">OpenStreetMap</a> contributors',
       zoom: 15,
       center: [51.505, -0.159],
-      markerLatLng: [51.504, -0.159]
+      markerLatLng: [51.504, -0.159],
+      data: []
     };
+  },
+
+  created() {
+    this.fetchData()
+  },
+
+  methods: {
+    async fetchData() {
+        try {
+            const response = await axios.get("http://localhost:5001/api/points");
+
+            this.data = response.data;
+            console.log(this.data)
+        } catch (error) {
+            console.log({error})
+        }
+    }
   }
 }
 </script>

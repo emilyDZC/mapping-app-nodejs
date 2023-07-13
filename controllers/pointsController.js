@@ -32,19 +32,22 @@ exports.getPoints = async (req, res, next) => {
         //     }
         //   }
         // })
-        const points = await Point.aggregate([
-          {
-            $geoNear: {
-                near: { type: "Point", coordinates: [ -69.92467200399993, 12.519232489000045 ] },
-                distanceField: "dist.calculated",
-                maxDistance: 200,
-                // query: { category: "Parks" },
-                includeLocs: "dist.location",
-                spherical: true
-            }
-          }
-        ])
+        // const points = await Point.aggregate([
+        //   {
+        //     $geoNear: {
+        //         near: { type: "Point", coordinates: [ -69.92467200399993, 12.519232489000045 ] },
+        //         distanceField: "dist.calculated",
+        //         maxDistance: 200,
+        //         // query: { category: "Parks" },
+        //         includeLocs: "dist.location",
+        //         spherical: true
+        //     }
+        //   }
+        // ])
 
+        const points = await Point.find({});
+
+        res.header("Access-Control-Allow-Origin", "*");
         return res.status(200).json({
             success: true,
             data: points
