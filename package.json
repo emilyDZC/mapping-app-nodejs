@@ -4,18 +4,22 @@
   "description": "An api with an endpoint to allow spatial data requests",
   "main": "server.js",
   "scripts": {
-    "start": "node server.js",
-    "server": "nodemon server"
+    "start": "node server",
+    "server": "nodemon server",
+    "client": "npm start --prefix client",
+    "dev": "concurrently \"npm run server\" \"npm run client\""
   },
   "author": "Emily Chaplais",
   "license": "ISC",
   "dependencies": {
     "colors": "^1.4.0",
-    "concurrently": "^8.2.0",
     "dotenv": "^16.3.1",
     "express": "^4.18.2",
     "mongoose": "^7.3.4",
     "morgan": "^1.10.0",
     "nodemon": "^3.0.1"
+  },
+  "devDependencies": {
+    "concurrently": "^8.2.0"
   }
 }
