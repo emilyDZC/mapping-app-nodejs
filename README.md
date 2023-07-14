@@ -1,6 +1,6 @@
 # mapping-app
 
-To run this project locally, first run `npm i` to install the dependencies, then `npm run dev` to start the server.
+To run this project locally, first fork the repository and then run `npm i` to install the dependencies, then `npm run dev` to start the server.
 
 The endpoint to fetch coordinate data is `GET localhost:5001/api/points/single`.
 
