@@ -1,47 +1,49 @@
 <template>
-  <l-map style="height: 300px" :zoom="zoom" :center="center">
+  <l-map style="height: 600px" :zoom="zoom" :center="center">
     <l-tile-layer :url="url" :attribution="attribution"></l-tile-layer>
     <l-marker :lat-lng="markerLatLng"></l-marker>
+    <l-geo-json :geojson="geojson"></l-geo-json>
   </l-map>
 </template>
 
 <script>
-import {LMap, LTileLayer, LMarker} from 'vue2-leaflet';
+import L from 'leaflet';
+import {LMap, LTileLayer, LMarker, LGeoJson} from 'vue2-leaflet';
 import axios from 'axios'
+import { Icon } from 'leaflet';
+
+// Fix icons not showing
+delete Icon.Default.prototype._getIconUrl;
+Icon.Default.mergeOptions({
+  iconRetinaUrl: require('leaflet/dist/images/marker-icon-2x.png'),
+  iconUrl: require('leaflet/dist/images/marker-icon.png'),
+  shadowUrl: require('leaflet/dist/images/marker-shadow.png'),
+});
 
 export default {
   components: {
     LMap,
     LTileLayer,
-    LMarker
+    LMarker,
+    LGeoJson
   },
   data () {
     return {
       url: 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
       attribution:
         '&copy; <a target="_blank" href="http://osm.org/copyright">OpenStreetMap</a> contributors',
-      zoom: 15,
-      center: [51.505, -0.159],
-      markerLatLng: [51.504, -0.159],
-      data: []
+      zoom: 10,
+      center: [53.383026, -1.505438],
+      markerLatLng: [53.383026, -1.505438],
+      data: [],
+      geojson: null
     };
   },
 
-  created() {
-    this.fetchData()
+  async created() {
+    const response = await axios.get("http://localhost:5001/api/points");
+    this.geojson = response.data;
   },
 
-  methods: {
-    async fetchData() {
-        try {
-            const response = await axios.get("http://localhost:5001/api/points");
-
-            this.data = response.data;
-            console.log(this.data)
-        } catch (error) {
-            console.log({error})
-        }
-    }
-  }
 }
 </script>
