@@ -14,13 +14,48 @@ exports.getPoints = async (req, res, next) => {
           "features": features
         }
 
-        // Fix CORS error
+        // Fixes CORS error
         res.header("Access-Control-Allow-Origin", "*");
         return res.status(200).json(featureCollection)
     } catch (error) {
-        console.log(`Error: ${error}`);
+        console.log({error});
         return res.status(500).json({ success: false, error: "Server Error"});
     }
+}
+
+// @desc    Get point
+// @route   GET /api/point/single
+// @access  Public
+
+exports.getPoint = async (req, res, next) => {
+  try {
+    const { lat, long } = req.body;
+    // request format:
+    //   {
+    //     "lat": 11.738,
+    //     "long": -16.7
+    //   }
+
+    const point = await Point.find({
+      geometry: {
+        $geoIntersects: {
+          $geometry: {
+            type: "Point",
+            coordinates: [lat, long]
+          }
+        }
+      }
+    });
+
+    if (point.length) {
+      return res.status(200).json(point[0].properties);
+    } else {
+      return res.status(404).json({message: "Not Found"})
+    }
+  } catch (error) {
+    console.log({error})
+    return res.status(500).json({ success: false, error: "Server Error"});
+  }
 }
 
 // @desc    Add point

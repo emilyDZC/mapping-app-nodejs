@@ -10,9 +10,16 @@ const PointSchema = new mongoose.Schema({
     type: Object
   },
   geometry: {
-    type: Object
+    type: {
+      type: String, 
+    },
+    coordinates: {
+      type: Array,
+    }
   },
 });
+
+PointSchema.index({ geometry: "2dsphere" });
 
 // Example feature format from geoJSON file:
 // { "type": "Feature", 
