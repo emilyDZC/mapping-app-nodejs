@@ -38,7 +38,7 @@ export default {
       url: 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
       attribution:
         '&copy; <a target="_blank" href="http://osm.org/copyright">OpenStreetMap</a> contributors',
-      zoom: 10,
+      zoom: 5,
       center: [53.383026, -1.505438],
       markerLatLng: [53.383026, -1.505438],
       data: [],
