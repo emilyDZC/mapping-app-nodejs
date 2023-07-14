@@ -21,6 +21,15 @@ if (process.env.NODE_ENV === "development") {
 
 app.use("/api/points", points);
 
+// Build settings for production
+if (process.env.NODE_ENV === "production") {
+    app.use(express.static("client/build"));
+  
+    app.get("*", (req, res) =>
+      res.sendFile(path.resolve("my-articles", "client", "build", "index.html"))
+    );
+  }
+
 const PORT = process.env.PORT || 5001;
 
 app.listen(
