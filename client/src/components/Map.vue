@@ -3,14 +3,14 @@
         <l-map style="height: 400px; width: 1000px" :zoom="zoom" :center="center">
             <l-tile-layer :url="url" :attribution="attribution"></l-tile-layer>
             <l-marker :lat-lng="markerLatLng"></l-marker>
-            <l-geo-json :visible="showLayer" :geojson="geojson"></l-geo-json>
+            <l-geo-json :visible="showLayer" :geojson="geojson" :options="options">
+            </l-geo-json>
         </l-map>
     </div>
 </template>
 
 <script>
-import L from 'leaflet';
-import {LMap, LTileLayer, LMarker, LGeoJson} from 'vue2-leaflet';
+import {LMap, LTileLayer, LMarker, LGeoJson, LPopup} from 'vue2-leaflet';
 import axios from 'axios'
 import { Icon } from 'leaflet';
 
@@ -30,7 +30,8 @@ export default {
     LMap,
     LTileLayer,
     LMarker,
-    LGeoJson
+    LGeoJson,
+    LPopup
   },
   data () {
     return {
@@ -41,10 +42,34 @@ export default {
       center: [53.383026, -1.505438],
       markerLatLng: [53.383026, -1.505438],
       data: [],
-      geojson: null
+      geojson: null,
+      fillColor: "#e4ce7f"
     };
   },
 
+   computed: { 
+        options() { 
+            return { onEachFeature: this.onEachFeatureFunction }; 
+        }, 
+        styleFunction() { 
+            const fillColor = this.fillColor; // important! need touch fillColor in computed for re-calculate when change fillColor 
+            return () => { 
+                return { 
+                    weight: 2, 
+                    color: "#ECEFF1", 
+                    opacity: 1, 
+                    fillColor: fillColor, 
+                    fillOpacity: 1 
+                }; 
+            }; 
+        }, 
+        onEachFeatureFunction() { 
+            return (feature, layer) => { 
+                layer.bindPopup(feature.properties.ADMIN); 
+                // layer.bindTooltip(feature.properties.ADMIN, { permanent: false, sticky: false } ); 
+            };
+        }
+   },
   async created() {
     const response = await axios.get("http://localhost:5001/api/points");
     this.geojson = response.data;
