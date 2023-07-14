@@ -1,9 +1,11 @@
 <template>
-  <l-map style="height: 600px" :zoom="zoom" :center="center">
-    <l-tile-layer :url="url" :attribution="attribution"></l-tile-layer>
-    <l-marker :lat-lng="markerLatLng"></l-marker>
-    <l-geo-json :geojson="geojson"></l-geo-json>
-  </l-map>
+    <div class="map-container">
+        <l-map style="height: 400px; width: 1000px" :zoom="zoom" :center="center">
+            <l-tile-layer :url="url" :attribution="attribution"></l-tile-layer>
+            <l-marker :lat-lng="markerLatLng"></l-marker>
+            <l-geo-json :visible="showLayer" :geojson="geojson"></l-geo-json>
+        </l-map>
+    </div>
 </template>
 
 <script>
@@ -21,6 +23,9 @@ Icon.Default.mergeOptions({
 });
 
 export default {
+    props: {
+        showLayer: Boolean
+    },
   components: {
     LMap,
     LTileLayer,
@@ -47,3 +52,15 @@ export default {
 
 }
 </script>
+
+<style scoped>
+    .map-container {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        border: 8px solid rgb(88, 190, 170);
+        width: 1000px;
+        margin: 0 auto;
+    }
+</style>
