@@ -71,7 +71,7 @@ export default {
         }
    },
   async created() {
-    const response = await axios.get("http://localhost:5001/api/points");
+    const response = await axios.get(process.env.VUE_APP_BASE_URL + "/api/points");
     this.geojson = response.data;
   },
 
