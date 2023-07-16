@@ -14,7 +14,7 @@ let points = geoFile.features.map(country => {
 });
 
 // Connect mongoose
-mongoose.connect(uri)
+mongoose.connect(uri.toString())
     .catch(err => {
         console.log(err.stack);
         process.exit(1);
