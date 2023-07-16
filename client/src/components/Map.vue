@@ -71,7 +71,8 @@ export default {
         }
    },
   async created() {
-    const response = await axios.get(process.env.VUE_APP_BASE_URL + "/api/points");
+    
+    const response = await axios.get(process.env.VUE_APP_ENV == "development" ? process.env.VUE_APP_BASE_URL + "/api/points" : "/api/points");
     this.geojson = response.data;
   },
 
