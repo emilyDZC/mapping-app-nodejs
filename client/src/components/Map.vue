@@ -1,9 +1,12 @@
 <template>
     <div class="map-container">
-        <l-map style="height: 400px; width: 1000px" :zoom="zoom" :center="center">
+        <div style="height: 400px; width: 1000px; margin: 50px;" v-if="loading">Loading map...</div>
+        <l-map v-else style="height: 400px; width: 1000px" :zoom="zoom" :center="center">
             <l-tile-layer :url="url" :attribution="attribution"></l-tile-layer>
             <l-marker :lat-lng="markerLatLng"></l-marker>
-            <l-geo-json :visible="showLayer" :geojson="geojson" :options="options">
+            <l-geo-json :visible="showRiversLayer" :geojson="geojson[0]" :options="riverOptions">
+            </l-geo-json>
+            <l-geo-json :visible="showRegionsLayer" :geojson="geojson[1]" :options="regionOptions">
             </l-geo-json>
         </l-map>
     </div>
@@ -24,7 +27,8 @@ Icon.Default.mergeOptions({
 
 export default {
     props: {
-        showLayer: Boolean
+        showRiversLayer: Boolean,
+        showRegionsLayer: Boolean
     },
   components: {
     LMap,
@@ -35,6 +39,7 @@ export default {
   },
   data () {
     return {
+      loading: false,
       url: 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
       attribution:
         '&copy; <a target="_blank" href="http://osm.org/copyright">OpenStreetMap</a> contributors',
@@ -48,32 +53,67 @@ export default {
   },
 
    computed: { 
-        options() { 
-            return { onEachFeature: this.onEachFeatureFunction }; 
-        }, 
-        styleFunction() { 
-            const fillColor = this.fillColor; // important! need touch fillColor in computed for re-calculate when change fillColor 
+        riverOptions() { 
+            return { onEachFeature: this.onEachFeatureFunction, style: this.riverStyle }; 
+        },
+        regionOptions() {
+            return { onEachFeature: this.onEachFeatureFunction, style: this.regionStyle }; 
+        },
+        riverStyle() { 
+            const fillColor = this.fillColor;
             return () => { 
                 return { 
                     weight: 2, 
-                    color: "#ECEFF1", 
+                    color: "#2a74f5", 
                     opacity: 1, 
-                    fillColor: fillColor, 
+                    // fillColor: fillColor, 
                     fillOpacity: 1 
                 }; 
             }; 
-        }, 
+        },
+        regionStyle() {
+            const fillColor = this.fillColor;
+            return () => { 
+                return { 
+                    weight: 2, 
+                    color: "#32ad38", 
+                    opacity: 1, 
+                    // fillColor: fillColor, 
+                    // fillOpacity: 1 
+                }; 
+            }; 
+        },
         onEachFeatureFunction() { 
             return (feature, layer) => { 
-                layer.bindPopup(feature.properties.ADMIN); 
-                // layer.bindTooltip(feature.properties.ADMIN, { permanent: false, sticky: false } ); 
+                layer.bindPopup(this.formatPopup(feature.properties)); 
+                // {"scalerank":0,"name":"MELANESIA","namealt":null,"region":"Oceania","subregion":"Melanesia","featureclass":"Island group"}
             };
         }
    },
+
+   methods: {
+        /**
+         * Format the pop data as an html string
+         */
+        formatPopup(obj) {
+          if (typeof obj == 'object') {
+            let html = '<div>';
+            for (let key in obj) {
+              html += `<p>${key}: ${obj[key]}</p>`
+            }
+            html += '</div>'
+            return html
+          } else {
+            return ''
+          }
+        }
+   },
+
   async created() {
-    
+    this.loading = true;
     const response = await axios.get(process.env.VUE_APP_ENV == "development" ? process.env.VUE_APP_BASE_URL + "/api/points" : "/api/points");
     this.geojson = response.data;
+    this.loading = false;
   },
 
 }

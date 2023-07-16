@@ -1,25 +1,25 @@
 <template>
   <div id="app">
-    <HelloWorld msg="Welcome to Your Vue.js App"/>
-    <div class="button-container">
-      <button class="show-layer-button" @click="showLayer = !showLayer">{{showLayer ? "Hide countries layer" : "Show countries layer"}}</button>
-    </div>
-    <Map :showLayer="showLayer"/>
+    <h1>Mapping app</h1>
+    <Button :text="showRiversLayer ? 'Hide rivers' : 'Show rivers'" @click="showRiversLayer = !showRiversLayer"/>
+    <Button :text="showRegionsLayer ? 'Hide regions' : 'Show regions'" @click="showRegionsLayer = !showRegionsLayer"/>
+    <Map :showRegionsLayer="showRegionsLayer" :showRiversLayer="showRiversLayer"/>
   </div>
 </template>
 
 <script>
-import HelloWorld from './components/HelloWorld.vue'
 import Map from './components/Map.vue'
+import Button from './components/Button.vue'
 
 export default {
   name: 'App',
   components: {
-    HelloWorld, Map
+    Map, Button
   },
   data() {
     return {
-      showLayer: false
+      showRiversLayer: false,
+      showRegionsLayer: false
     }
   },
 }
