@@ -8,6 +8,8 @@
             </l-geo-json>
             <l-geo-json :visible="showRegionsLayer" :geojson="geojson[1]" :options="regionOptions">
             </l-geo-json>
+            <l-geo-json :visible="showCrossbillsLayer" :geojson="geojson[2]" :options="regionOptions">
+            </l-geo-json>
         </l-map>
     </div>
 </template>
@@ -28,7 +30,8 @@ Icon.Default.mergeOptions({
 export default {
     props: {
         showRiversLayer: Boolean,
-        showRegionsLayer: Boolean
+        showRegionsLayer: Boolean,
+        showCrossbillsLayer: Boolean
     },
   components: {
     LMap,
@@ -85,7 +88,7 @@ export default {
         },
         onEachFeatureFunction() { 
             return (feature, layer) => { 
-                layer.bindPopup(this.formatPopup(feature.properties)); 
+                layer.bindPopup(this.formatPopup(feature.properties), {maxHeight: 200}); 
                 // {"scalerank":0,"name":"MELANESIA","namealt":null,"region":"Oceania","subregion":"Melanesia","featureclass":"Island group"}
             };
         }
@@ -128,5 +131,9 @@ export default {
         border: 8px solid rgb(88, 190, 170);
         width: 1000px;
         margin: 0 auto;
+    }
+
+    .leaflet-popup-content-wrapper {
+      max-height: 50px;
     }
 </style>

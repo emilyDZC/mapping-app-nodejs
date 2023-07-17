@@ -1,9 +1,12 @@
 <template>
   <div id="app">
     <h1>Mapping app</h1>
-    <Button :text="showRiversLayer ? 'Hide rivers' : 'Show rivers'" @click="showRiversLayer = !showRiversLayer"/>
-    <Button :text="showRegionsLayer ? 'Hide regions' : 'Show regions'" @click="showRegionsLayer = !showRegionsLayer"/>
-    <Map :showRegionsLayer="showRegionsLayer" :showRiversLayer="showRiversLayer"/>
+    <div class="buttons-container">
+      <Button :text="showRiversLayer ? 'Hide rivers' : 'Show rivers'" @click="showRiversLayer = !showRiversLayer"/>
+      <Button :text="showRegionsLayer ? 'Hide regions' : 'Show regions'" @click="showRegionsLayer = !showRegionsLayer"/>
+      <Button :text="showCrossbillsLayer ? 'Hide Scottish Crossbills (UK only)' : 'Show Scottish Crossbills (UK only)'" @click="showCrossbillsLayer = !showCrossbillsLayer"/>
+    </div>
+    <Map :showRegionsLayer="showRegionsLayer" :showRiversLayer="showRiversLayer" :showCrossbillsLayer="showCrossbillsLayer"/>
   </div>
 </template>
 
@@ -19,7 +22,8 @@ export default {
   data() {
     return {
       showRiversLayer: false,
-      showRegionsLayer: false
+      showRegionsLayer: false,
+      showCrossbillsLayer: false
     }
   },
 }
@@ -55,5 +59,12 @@ export default {
 
 .button-container {
   margin-bottom: 20px;
+}
+
+.buttons-container {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  column-gap: 20px;
 }
 </style>

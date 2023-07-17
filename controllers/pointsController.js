@@ -1,5 +1,6 @@
 const Point = require("../models/Point");
 const GeoRegion = require("../models/GeoRegion");
+const Crossbill = require("../models/Crossbill");
 
 // @desc    Get entire layer
 // @route   GET /api/points
@@ -23,9 +24,16 @@ exports.getPoints = async (req, res, next) => {
           "features": regions
         }
 
+        const crossbills = await Crossbill.find({});
+
+        let featureCollection3 = {
+          "type": "FeatureCollection",
+          "features": crossbills
+        }
+
         // Fixes CORS error
         res.header("Access-Control-Allow-Origin", "*");
-        return res.status(200).json([featureCollection, featureCollection2])
+        return res.status(200).json([featureCollection, featureCollection2, featureCollection3])
     } catch (error) {
         console.log({error});
         return res.status(500).json({ success: false, error: "Server Error"});
