@@ -4,6 +4,6 @@ const { getPoints, addPoint, getPoint } = require("../controllers/pointsControll
 
 router.route("/").get(getPoints).post(addPoint);
 
-router.route("/single").get(getPoint);
+router.route("/single").post(getPoint);
 
 module.exports = router;

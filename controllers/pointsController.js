@@ -2,7 +2,7 @@ const Point = require("../models/Point");
 const GeoRegion = require("../models/GeoRegion");
 const Crossbill = require("../models/Crossbill");
 
-// @desc    Get entire layer
+// @desc    Get layer data (array of 3 geojson datasets)
 // @route   GET /api/points
 // @access  Public
 
@@ -40,7 +40,7 @@ exports.getPoints = async (req, res, next) => {
     }
 }
 
-// @desc    Get point
+// @desc    Get data about a set of coordinates
 // @route   GET /api/point/single
 // @access  Public
 
@@ -49,16 +49,16 @@ exports.getPoint = async (req, res, next) => {
     const { lat, long } = req.body;
     // request format:
     //   {
-    //     "lat": 11.738,
-    //     "long": -16.7
+    //     "lat": 53.3,
+    //     "long": 1.47
     //   }
 
-    const point = await Point.find({
+    const point = await GeoRegion.find({
       geometry: {
         $geoIntersects: {
           $geometry: {
             type: "Point",
-            coordinates: [lat, long]
+            coordinates: [long, lat]
           }
         }
       }
