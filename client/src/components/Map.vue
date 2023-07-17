@@ -4,11 +4,11 @@
         <l-map v-else style="height: 400px; width: 1000px" :zoom="zoom" :center="center">
             <l-tile-layer :url="url" :attribution="attribution"></l-tile-layer>
             <l-marker :lat-lng="markerLatLng"></l-marker>
-            <l-geo-json :visible="showRiversLayer" :geojson="geojson[0]" :options="riverOptions">
+            <l-geo-json :visible="showRiversLayer" :geojson="rivers" :options="riverOptions">
             </l-geo-json>
-            <l-geo-json :visible="showRegionsLayer" :geojson="geojson[1]" :options="regionOptions">
+            <l-geo-json :visible="showRegionsLayer" :geojson="regions" :options="regionOptions">
             </l-geo-json>
-            <l-geo-json :visible="showCrossbillsLayer" :geojson="geojson[2]" :options="regionOptions">
+            <l-geo-json :visible="showCrossbillsLayer" :geojson="crossbills" :options="regionOptions">
             </l-geo-json>
         </l-map>
     </div>
@@ -50,8 +50,10 @@ export default {
       center: [53.383026, -1.505438],
       markerLatLng: [53.383026, -1.505438],
       data: [],
-      geojson: null,
-      fillColor: "#e4ce7f"
+      fillColor: "#e4ce7f",
+      regions: [],
+      rivers: [],
+      crossbills: []
     };
   },
 
@@ -89,7 +91,6 @@ export default {
         onEachFeatureFunction() { 
             return (feature, layer) => { 
                 layer.bindPopup(this.formatPopup(feature.properties), {maxHeight: 200}); 
-                // {"scalerank":0,"name":"MELANESIA","namealt":null,"region":"Oceania","subregion":"Melanesia","featureclass":"Island group"}
             };
         }
    },
@@ -109,13 +110,22 @@ export default {
           } else {
             return ''
           }
+        },
+
+        filterData(layer) {
+            return layer.features.filter(feature => {
+              return Number(feature.properties['individualCount']) > 0
+              // return feature.properties['occurrenceStatus'] != "absent"
+            })
         }
    },
 
   async created() {
     this.loading = true;
     const response = await axios.get(process.env.VUE_APP_ENV == "development" ? process.env.VUE_APP_BASE_URL + "/api/points" : "/api/points");
-    this.geojson = response.data;
+    this.rivers = response.data[0];
+    this.regions = response.data[1]
+    this.crossbills = this.filterData(response.data[2])
     this.loading = false;
   },
 
