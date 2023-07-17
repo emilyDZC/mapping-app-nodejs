@@ -1,10 +1,9 @@
 <template>
     <div class="map-container">
-        <div style="height: 400px; width: 1000px; margin: 50px;" v-if="loading">Loading map...</div>
+        <div style="height: 500px; width: 1000px; margin: 50px;" v-if="loading">Loading map...</div>
         <l-map v-else style="height: 400px; width: 1000px" :zoom="zoom" :center="center">
             <l-tile-layer :url="url" :attribution="attribution"></l-tile-layer>
-            <l-marker></l-marker>
-            <!-- <l-marker :lat-lng="markerLatLng"></l-marker> -->
+            <l-marker :lat-lng="markerLatLng"></l-marker>
             <l-geo-json :visible="showRiversLayer" :geojson="rivers" :options="riverOptions">
             </l-geo-json>
             <l-geo-json :visible="showRegionsLayer" :geojson="regions" :options="regionOptions">
@@ -48,8 +47,8 @@ export default {
       attribution:
         '&copy; <a target="_blank" href="http://osm.org/copyright">OpenStreetMap</a> contributors',
       zoom: 5,
-      center: [53.383026, -1.505438],
-      // markerLatLng: [53.383026, -1.505438],
+      center: [54.383026, -1.705438],
+      markerLatLng: [54.383026, -1.705438],
       data: [],
       fillColor: "#e4ce7f",
       regions: [],
@@ -116,7 +115,6 @@ export default {
         filterData(layer) {
             return layer.features.filter(feature => {
               return Number(feature.properties['individualCount']) > 0
-              // return feature.properties['occurrenceStatus'] != "absent"
             })
         }
    },
